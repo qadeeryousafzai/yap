@@ -36,9 +36,9 @@ const AUTO_PLAY_MS = 6500;
 const slides: Slide[] = [
   {
     id: 1,
-    image: HeroBgImage,
+    image: HeroBgImage.src ,
     imageAlt: "Youth Association of Pakistan community leadership gathering",
-    imagePosition: "center 38%",
+    imagePosition: "center 38%", 
     eyebrow: "Youth Association of Pakistan",
     title: "Empowering communities with skill, purpose, and leadership.",
     description:
