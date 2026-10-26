@@ -1,0 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root{--ink:#10241d;--forest:#073d2c;--green:#16834a;--lime:#c6ef55;--paper:#f8faf7;--line:#e5ebe6}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:'Manrope','DM Sans',sans-serif}::selection{background:#c6ef55;color:#073d2c}
+.container-yap{width:min(1200px,calc(100% - 48px));margin-inline:auto}.eyebrow{letter-spacing:.18em;text-transform:uppercase;font-size:11px;font-weight:800}.soft-grid{background-image:radial-gradient(#164b3820 1px,transparent 1px);background-size:24px 24px}.hero-wash{background:linear-gradient(90deg,rgba(4,27,19,.86) 0%,rgba(4,27,19,.62) 46%,rgba(4,27,19,.08) 100%)}.text-balance{text-wrap:balance}.reveal{animation:reveal .8s both}@keyframes reveal{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}.marquee{animation:marquee 30s linear infinite}@keyframes marquee{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}

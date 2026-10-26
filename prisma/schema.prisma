@@ -1,0 +1,429 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  REVIEWING
+}
+
+enum ProjectStatus {
+  PLANNED
+  ONGOING
+  COMPLETED
+  ARCHIVED
+}
+
+enum DonationStatus {
+  PENDING
+  VERIFIED
+  FAILED
+  REFUNDED
+}
+
+enum RoleName {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+  MEMBERSHIP
+  FINANCE
+  HR
+}
+
+model AdminUser {
+  id           String         @id @default(cuid())
+  name         String
+  email        String         @unique
+  passwordHash String
+  role         RoleName       @default(EDITOR)
+  active       Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  sessions     AdminSession[]
+  activities   ActivityLog[]
+}
+
+model AdminSession {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([expiresAt])
+}
+
+model Page {
+  id              String        @id @default(cuid())
+  slug            String        @unique
+  title           String
+  content         String        @db.LongText
+  metaTitle       String?       @db.VarChar(180)
+  metaDescription String?       @db.VarChar(320)
+  status          ContentStatus @default(DRAFT)
+  updatedAt       DateTime      @updatedAt
+  createdAt       DateTime      @default(now())
+}
+
+model HomepageSection {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  title     String
+  subtitle  String?  @db.Text
+  content   Json?
+  imageUrl  String?  @db.VarChar(2048)
+  enabled   Boolean  @default(true)
+  sortOrder Int      @default(0)
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+model TeamMember {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  designation String
+  department  String?
+  biography   String   @db.LongText
+  imageUrl    String?  @db.VarChar(2048)
+  category    String   @default("Leadership")
+  socialLinks Json?
+  sortOrder   Int      @default(0)
+  featured    Boolean  @default(false)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@index([active, sortOrder])
+}
+
+model Career {
+  id               String           @id @default(cuid())
+  title            String
+  slug             String           @unique
+  department       String
+  location         String
+  employmentType   String
+  description      String           @db.LongText
+  requirements     String           @db.LongText
+  responsibilities String           @db.LongText
+  deadline         DateTime?
+  status           ContentStatus    @default(DRAFT)
+  applications     JobApplication[]
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([status, deadline])
+}
+
+model JobApplication {
+  id        String            @id @default(cuid())
+  careerId  String
+  name      String
+  email     String
+  phone     String
+  cvUrl     String?           @db.VarChar(2048)
+  message   String?           @db.LongText
+  status    ApplicationStatus @default(PENDING)
+  createdAt DateTime          @default(now())
+  career    Career            @relation(fields: [careerId], references: [id], onDelete: Restrict)
+
+  @@index([email, status])
+}
+
+model MembershipApplication {
+  id            String            @id @default(cuid())
+  applicationNo String            @unique
+  name          String
+  email         String
+  phone         String
+  city          String
+  province      String
+  education     String?
+  profession    String?
+  interests     Json?
+  skills        String?           @db.Text
+  category      String
+  motivation    String            @db.Text
+  status        ApplicationStatus @default(PENDING)
+  createdAt     DateTime          @default(now())
+
+  @@index([email, status, createdAt])
+}
+
+model Member {
+  id        String   @id @default(cuid())
+  memberNo  String   @unique
+  name      String
+  email     String   @unique
+  phone     String
+  city      String
+  province  String
+  category  String
+  active    Boolean  @default(true)
+  joinedAt  DateTime @default(now())
+  createdAt DateTime @default(now())
+}
+
+model Event {
+  id                   String              @id @default(cuid())
+  title                String
+  slug                 String              @unique
+  description          String              @db.LongText
+  category             String
+  imageUrl             String?             @db.VarChar(2048)
+  startsAt             DateTime
+  endsAt               DateTime?
+  venue                String
+  city                 String
+  registrationDeadline DateTime?
+  capacity             Int?
+  status               ContentStatus       @default(DRAFT)
+  featured             Boolean             @default(false)
+  registrations        EventRegistration[]
+  createdAt            DateTime            @default(now())
+
+  @@index([status, startsAt])
+}
+
+model EventRegistration {
+  id        String   @id @default(cuid())
+  eventId   String
+  name      String
+  email     String
+  phone     String?
+  createdAt DateTime @default(now())
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, email])
+  @@index([createdAt])
+}
+
+model ProjectCategory {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  slug     String    @unique
+  projects Project[]
+}
+
+model Project {
+  id            String           @id @default(cuid())
+  title         String
+  slug          String           @unique
+  description   String           @db.LongText
+  objectives    String?          @db.LongText
+  beneficiaries String?          @db.Text
+  location      String?
+  imageUrl      String?          @db.VarChar(2048)
+  status        ProjectStatus    @default(PLANNED)
+  startDate     DateTime?
+  endDate       DateTime?
+  categoryId    String?
+  featured      Boolean          @default(false)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  category      ProjectCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  appeals       DonationAppeal[]
+
+  @@index([status, featured])
+}
+
+model DonationAppeal {
+  id           String        @id @default(cuid())
+  title        String
+  slug         String        @unique
+  description  String        @db.LongText
+  targetAmount Decimal       @db.Decimal(14, 2)
+  currency     String        @default("PKR") @db.Char(3)
+  startsAt     DateTime?
+  endsAt       DateTime?
+  status       ContentStatus @default(DRAFT)
+  imageUrl     String?       @db.VarChar(2048)
+  projectId    String?
+  project      Project?      @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  donations    Donation[]
+  createdAt    DateTime      @default(now())
+
+  @@index([status, endsAt])
+}
+
+model Donation {
+  id          String              @id @default(cuid())
+  appealId    String
+  donorName   String?
+  donorEmail  String?
+  amount      Decimal             @db.Decimal(14, 2)
+  currency    String              @default("PKR") @db.Char(3)
+  status      DonationStatus      @default(PENDING)
+  publicName  Boolean             @default(false)
+  verifiedAt  DateTime?
+  createdAt   DateTime            @default(now())
+  appeal      DonationAppeal      @relation(fields: [appealId], references: [id], onDelete: Restrict)
+  transaction PaymentTransaction?
+  receipt     DonationReceipt?
+
+  @@index([appealId, status, createdAt])
+}
+
+model PaymentTransaction {
+  id             String   @id @default(cuid())
+  donationId     String   @unique
+  provider       String
+  providerRef    String?  @unique
+  idempotencyKey String   @unique
+  status         String
+  rawEventId     String?  @unique
+  createdAt      DateTime @default(now())
+  donation       Donation @relation(fields: [donationId], references: [id], onDelete: Restrict)
+}
+
+model DonationReceipt {
+  id         String   @id @default(cuid())
+  donationId String   @unique
+  receiptNo  String   @unique
+  issuedAt   DateTime @default(now())
+  donation   Donation @relation(fields: [donationId], references: [id], onDelete: Restrict)
+}
+
+model GalleryAlbum {
+  id        String        @id @default(cuid())
+  title     String
+  slug      String        @unique
+  items     GalleryItem[]
+  createdAt DateTime      @default(now())
+}
+
+model GalleryItem {
+  id        String        @id @default(cuid())
+  albumId   String?
+  type      String        @default("IMAGE")
+  url       String        @db.VarChar(2048)
+  caption   String?
+  altText   String?
+  sortOrder Int           @default(0)
+  published Boolean       @default(false)
+  album     GalleryAlbum? @relation(fields: [albumId], references: [id], onDelete: SetNull)
+}
+
+model BlogCategory {
+  id    String     @id @default(cuid())
+  name  String     @unique
+  slug  String     @unique
+  posts BlogPost[]
+}
+
+model BlogTag {
+  id    String        @id @default(cuid())
+  name  String        @unique
+  slug  String        @unique
+  posts BlogPostTag[]
+}
+
+model BlogPost {
+  id              String        @id @default(cuid())
+  title           String
+  slug            String        @unique
+  excerpt         String        @db.Text
+  content         String        @db.LongText
+  imageUrl        String?       @db.VarChar(2048)
+  author          String
+  status          ContentStatus @default(DRAFT)
+  publishedAt     DateTime?
+  metaTitle       String?       @db.VarChar(180)
+  metaDescription String?       @db.VarChar(320)
+  categoryId      String?
+  category        BlogCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags            BlogPostTag[]
+  createdAt       DateTime      @default(now())
+
+  @@index([status, publishedAt])
+}
+
+model BlogPostTag {
+  postId String
+  tagId  String
+  post   BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+}
+
+model MediaAsset {
+  id        String   @id @default(cuid())
+  url       String   @db.VarChar(2048)
+  publicId  String?  @unique
+  fileName  String
+  mimeType  String
+  size      Int
+  altText   String?
+  createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String    @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String    @db.Text
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([readAt, createdAt])
+}
+
+model NewsletterSubscriber {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  confirmedAt DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model Partner {
+  id          String  @id @default(cuid())
+  name        String
+  logoUrl     String? @db.VarChar(2048)
+  websiteUrl  String? @db.VarChar(2048)
+  description String? @db.Text
+  active      Boolean @default(true)
+  sortOrder   Int     @default(0)
+}
+
+model Testimonial {
+  id       String  @id @default(cuid())
+  name     String
+  role     String?
+  quote    String  @db.Text
+  imageUrl String? @db.VarChar(2048)
+  approved Boolean @default(false)
+}
+
+model ActivityLog {
+  id        String     @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  createdAt DateTime   @default(now())
+  user      AdminUser? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt, entity])
+}
