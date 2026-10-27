@@ -15,7 +15,7 @@ test("newsletter validation rejects non-email input", () => {
 });
 
 test("membership applications require consent and basic location details", () => {
-  const base = { name: "Sam Example", email: "sam@example.org", phone: "+923001234567", city: "Lahore", province: "Punjab", category: "Youth member", motivation: "I want to contribute my time to community work.", consent: "on" };
+  const base = { name: "Sam Example", email: "sam@example.org", phone: "+923001234567", city: "Lahore", province: "Punjab", category: "Youth member", motivation: "I want to contribute my time to community work.", consent: "on", paymentMethod: "bank", senderAccountName: "Sam Example", transactionReference: "TXN-123456" };
   assert.equal(membershipSchema.safeParse(base).success, true);
   assert.equal(membershipSchema.safeParse({ ...base, consent: undefined }).success, false);
 });

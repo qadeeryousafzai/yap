@@ -26,9 +26,13 @@ export async function signOut() {
 export async function getAdmin() {
   const token = (await cookies()).get(COOKIE)?.value;
   if (!token) return null;
-  const session = await db.adminSession.findUnique({ where: { tokenHash: digest(token) }, include: { user: true } });
-  if (!session || session.expiresAt < new Date() || !session.user.active) return null;
-  return { id: session.user.id, name: session.user.name, email: session.user.email, role: session.user.role };
+  try {
+    const session = await db.adminSession.findUnique({ where: { tokenHash: digest(token) }, include: { user: true } });
+    if (!session || session.expiresAt < new Date() || !session.user.active) return null;
+    return { id: session.user.id, name: session.user.name, email: session.user.email, role: session.user.role };
+  } catch {
+    return null;
+  }
 }
 
 const permissions: Record<string, string[]> = {

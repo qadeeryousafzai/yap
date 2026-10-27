@@ -2,7 +2,14 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
-const adapter = process.env.DATABASE_URL ? new PrismaMariaDb(process.env.DATABASE_URL) : undefined;
+const adapter = (() => {
+  if (!process.env.DATABASE_URL) return undefined;
+  const connectionUrl = new URL(process.env.DATABASE_URL);
+  if (!connectionUrl.searchParams.has("connectionLimit")) {
+    connectionUrl.searchParams.set("connectionLimit", process.env.DB_CONNECTION_LIMIT ?? "2");
+  }
+  return new PrismaMariaDb(connectionUrl.toString());
+})();
 export const db = globalForPrisma.prisma ?? new PrismaClient({
   adapter,
   log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],

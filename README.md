@@ -20,6 +20,16 @@ A Next.js App Router + TypeScript foundation for the YAP public website and priv
 6. Start the development server with `npm run dev`.
 7. Visit `/` for the public website and `/admin/login` for administrators.
 
+For detailed Hostinger MySQL setup, remote access/IP allowlisting guidance, and first-admin provisioning, see [DB_SETUP.md](DB_SETUP.md). There are no default admin credentials; create them from a trusted terminal with `pnpm admin:create`.
+
+Membership applicants submit bank transfer details and a payment screenshot (JPG, PNG, or WebP, max 5 MB). The screenshot is stored in MySQL and served only to authorized membership administrators. Apply the `20261027000000_membership_payment_proof` migration before using the updated form.
+
+After the migration is applied, authorized admins can configure the fixed fee and bank/wallet destinations under `/admin/settings`. These settings are read by the public membership form; other admin list pages are not generic editors, so only data explicitly connected to a public page/API will affect the front end.
+
+The admin content forms also accept image uploads from a device. Apply the `20261027000100_admin_media_uploads` migration before uploading images; upload bytes are stored in the `MediaAsset` table so they persist across deployments and do not depend on a local server disk.
+
+If the database reports Hostinger's `max_connections_per_hour` limit, stop/restart local dev servers and other processes using the database, then wait for the provider's quota window to reset or ask support to raise the limit. The app pool now defaults to two connections per process (`DB_CONNECTION_LIMIT`), but separate local/preview/production processes each create their own pool.
+
 Set a database connection limit/pooling strategy appropriate to your provider and Vercel serverless concurrency. Run `npm run db:deploy` as a controlled deployment step; do not run destructive development migrations in production.
 
 ## Environment variables

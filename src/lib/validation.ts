@@ -13,6 +13,9 @@ export const membershipSchema = z.object({
   name: z.string().trim().min(2).max(100), email: z.string().trim().email().max(254), phone: z.string().trim().min(7).max(30),
   city: z.string().trim().min(2).max(80), province: z.string().trim().min(2).max(80), category: z.string().trim().min(2).max(80),
   motivation: z.string().trim().min(20).max(3000), consent: z.literal("on"),
+  paymentMethod: z.enum(["bank", "wallet"]),
+  senderAccountName: z.string().trim().min(2).max(120),
+  transactionReference: z.string().trim().min(3).max(120),
   education: z.string().max(160).optional(), profession: z.string().max(160).optional(), interests: z.string().max(800).optional(), skills: z.string().max(1500).optional(),
   website: z.string().max(0).optional(),
 });
