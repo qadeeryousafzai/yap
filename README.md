@@ -22,6 +22,10 @@ A Next.js App Router + TypeScript foundation for the YAP public website and priv
 
 For detailed Hostinger MySQL setup, remote access/IP allowlisting guidance, and first-admin provisioning, see [DB_SETUP.md](DB_SETUP.md). There are no default admin credentials; create them from a trusted terminal with `pnpm admin:create`.
 
+For a step-by-step production deployment connecting Hostinger MySQL to Vercel—including remote access prerequisites, environment variables, migrations, deployment, domain DNS, and troubleshooting—see [VERCEL_HOSTINGER_DEPLOYMENT.md](VERCEL_HOSTINGER_DEPLOYMENT.md).
+
+For a quick, project-specific Hostinger-to-Vercel checklist, see [sertup/README.md](sertup/README.md).
+
 Membership applicants submit bank transfer details and a payment screenshot (JPG, PNG, or WebP, max 5 MB). The screenshot is stored in MySQL and served only to authorized membership administrators. Apply the `20261027000000_membership_payment_proof` migration before using the updated form.
 
 After the migration is applied, authorized admins can configure the fixed fee and bank/wallet destinations under `/admin/settings`. These settings are read by the public membership form; other admin list pages are not generic editors, so only data explicitly connected to a public page/API will affect the front end.
