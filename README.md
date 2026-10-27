@@ -28,7 +28,7 @@ After the migration is applied, authorized admins can configure the fixed fee an
 
 The admin content forms also accept image uploads from a device. Apply the `20261027000100_admin_media_uploads` migration before uploading images; upload bytes are stored in the `MediaAsset` table so they persist across deployments and do not depend on a local server disk.
 
-If the database reports Hostinger's `max_connections_per_hour` limit, stop/restart local dev servers and other processes using the database, then wait for the provider's quota window to reset or ask support to raise the limit. The app pool now defaults to two connections per process (`DB_CONNECTION_LIMIT`), but separate local/preview/production processes each create their own pool.
+If the database reports Hostinger's `max_connections_per_hour` limit, stop/restart local dev servers and other processes using the database, then wait for the provider's quota window to reset or ask support to raise the limit. The app pool now defaults to one connection per process (`DB_CONNECTION_LIMIT`), but separate local/preview/production processes each create their own pool. This client-side setting cannot clear or bypass a quota already enforced by Hostinger.
 
 Set a database connection limit/pooling strategy appropriate to your provider and Vercel serverless concurrency. Run `npm run db:deploy` as a controlled deployment step; do not run destructive development migrations in production.
 

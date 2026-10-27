@@ -5,9 +5,7 @@ const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 const adapter = (() => {
   if (!process.env.DATABASE_URL) return undefined;
   const connectionUrl = new URL(process.env.DATABASE_URL);
-  if (!connectionUrl.searchParams.has("connectionLimit")) {
-    connectionUrl.searchParams.set("connectionLimit", process.env.DB_CONNECTION_LIMIT ?? "2");
-  }
+  connectionUrl.searchParams.set("connectionLimit", process.env.DB_CONNECTION_LIMIT ?? "1");
   return new PrismaMariaDb(connectionUrl.toString());
 })();
 export const db = globalForPrisma.prisma ?? new PrismaClient({

@@ -19,7 +19,7 @@ This project uses MySQL through Prisma. Hostinger’s menu labels and remote dat
 
    URL-encode special characters in the username/password. Keep the URL in `.env`, never commit it, and do not paste it into chat or screenshots. Use `127.0.0.1`/`localhost` only when the Next.js application and MySQL are on the same host and Hostinger explicitly documents that connection mode.
 
-   Keep `DB_CONNECTION_LIMIT=2` (or lower it if your plan is more restrictive). This caps the app's per-process MariaDB connection pool; do not raise it on shared hosting without checking Hostinger's limits.
+   Keep `DB_CONNECTION_LIMIT=1` (or lower it if your plan is more restrictive). This caps the app's per-process MariaDB connection pool; do not raise it on shared hosting without checking Hostinger's limits. It cannot reset a quota that Hostinger has already exhausted.
 
 3. Set `NEXT_PUBLIC_SITE_URL` to your local URL during development and to the public HTTPS domain in production. Set `AUTH_SECRET` to a long random value. On macOS/Linux, generate one with `openssl rand -base64 48` and paste it directly into `.env`.
 4. Install project dependencies with `pnpm install`.
