@@ -100,16 +100,16 @@ export default async function Home() {
         <div className="hero-wash absolute inset-0" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#06291e]/70 via-transparent to-[#06291e]/20" />
         <Header />
-        <div className="container-yap relative flex min-h-[760px] items-center pt-24 md:min-h-[850px]">
-          <div className="max-w-[770px] pb-16">
-            <div className="reveal mb-8 flex items-center gap-3">
+        <div className="container-yap relative flex min-h-[760px] items-center justify-center pb-32 pt-28 text-center md:min-h-[850px] md:justify-start md:pb-20 md:pt-24 md:text-left">
+          <div className="w-full max-w-[770px] pb-4 md:pb-0">
+            <div className="reveal mb-6 flex items-center justify-center gap-3 md:mb-8 md:justify-start">
               <span className="h-px w-10 bg-lime-300" />
               <span className="eyebrow text-lime-300">
                 A youth-led movement · Pakistan
               </span>
             </div>
             <h1
-              className="reveal text-balance text-[clamp(3.5rem,8vw,7.4rem)] font-extrabold leading-[.98] tracking-[-.075em]"
+              className="reveal text-balance text-[clamp(2.5rem,10vw,7.4rem)] font-extrabold leading-[1.02] tracking-[-.07em] sm:text-[clamp(3rem,8vw,7.4rem)] md:leading-[.98] md:tracking-[-.075em]"
               style={{ animationDelay: ".1s" }}
             >
               Young energy.
@@ -117,7 +117,7 @@ export default async function Home() {
               <span className="text-[#c6ef55]">Lasting change.</span>
             </h1>
             <p
-              className="reveal mt-8 max-w-xl text-base leading-8 text-white/80 md:text-lg"
+              className="reveal mx-auto mt-6 max-w-xl text-sm leading-7 text-white/80 sm:text-base sm:leading-8 md:mx-0 md:mt-8 md:text-lg"
               style={{ animationDelay: ".2s" }}
             >
               We believe every young person can help shape a better Pakistan.
@@ -125,7 +125,7 @@ export default async function Home() {
               creating room for hope to grow.
             </p>
             <div
-              className="reveal mt-9 flex flex-wrap gap-3"
+              className="reveal mt-7 flex flex-wrap justify-center gap-3 md:mt-9 md:justify-start"
               style={{ animationDelay: ".3s" }}
             >
               <Link
@@ -171,28 +171,28 @@ export default async function Home() {
           </div>
         </div>
         <div className="absolute bottom-0 left-0 right-0">
-          <div className="container-yap grid grid-cols-3 divide-x divide-white/15 border-t border-white/15 py-5 text-white/80">
-            <div className="px-2 md:px-6">
-              <span className="block text-xl font-extrabold text-white md:text-2xl">
+          <div className="container-yap grid grid-cols-3 divide-x divide-white/15 border-t border-white/15 py-4 text-center text-white/80 sm:py-5 md:text-left">
+            <div className="px-1 sm:px-2 md:px-6">
+              <span className="block text-sm font-extrabold leading-tight text-white sm:text-xl md:text-2xl">
                 Youth-led
               </span>
-              <span className="text-[10px] uppercase tracking-[.16em] md:text-xs">
+              <span className="block text-[8px] uppercase leading-tight tracking-[.08em] sm:text-[10px] sm:tracking-[.16em] md:text-xs">
                 In every step
               </span>
             </div>
-            <div className="px-4 md:px-8">
-              <span className="block text-xl font-extrabold text-white md:text-2xl">
+            <div className="px-1 sm:px-4 md:px-8">
+              <span className="block text-sm font-extrabold leading-tight text-white sm:text-xl md:text-2xl">
                 Community-first
               </span>
-              <span className="text-[10px] uppercase tracking-[.16em] md:text-xs">
+              <span className="block text-[8px] uppercase leading-tight tracking-[.08em] sm:text-[10px] sm:tracking-[.16em] md:text-xs">
                 Always rooted locally
               </span>
             </div>
-            <div className="px-4 md:px-8">
-              <span className="block text-xl font-extrabold text-white md:text-2xl">
+            <div className="px-1 sm:px-4 md:px-8">
+              <span className="block break-words text-sm font-extrabold leading-tight text-white sm:text-xl md:text-2xl">
                 {statText}
               </span>
-              <span className="text-[10px] uppercase tracking-[.16em] md:text-xs">
+              <span className="block text-[8px] uppercase leading-tight tracking-[.08em] sm:text-[10px] sm:tracking-[.16em] md:text-xs">
                 Young members
                 {counts.events
                   ? ` · ${counts.events} upcoming events`
